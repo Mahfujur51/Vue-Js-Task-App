@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div id="app">
+   <div v-if="!loading">
+       <div class="container">
+           <div class="card card-body">
+               <div class="alert alert-success" v-if="successText.length>0">{{successText}}</div>
+           </div>
+           <div class="card card-body">
+               <div class="alert alert-danger" v-if="errorText.length>0">{{errorText}}</div>
+           </div>
+           <div class="card">
+               <div class="card-header">
+                   <h2 class="text-center">My Note app</h2>
+               </div>
+               <div class="card-body">
+                   <div class="row">
+                       <div class="col-md-3">
+                           <label for="">Note Title-{{title}}</label>
+                           <input type="text" v-model="title" class="form-control">
+                       </div>
+                       <div class="col-md-6">
+                           <label for="">Note Description</label>
+                           <input type="text" v-model="description" class="form-control">
+                       </div>
+                       <div class="col-md-3">
+                           <input type="submit" class="btn btn-success" value="Submit" @click="addnote">
+                       </div>
+                   </div>
+               </div>
+
+           </div>
+           <div class="card card-body mt-2" v-for="(notes,index) in note">
+               <button class="btn btn-danger" @click="deleteNote(index)">X</button>
+               <h2>{{notes.title}}</h2>
+               <hr>
+               <p>{{notes.description}}</p>
+           </div>
+       </div>
+
+   </div>
+    <div v-else>
+        Loading.........
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            loading:true,
+            title:"",
+            description:"",
+            note:[],
+            errorText:'',
+            successText:''
+        },
+        methods:{
+            addnote(){
+                let title=this.title;
+                let description=this.description;
+                if (title.length>0 && description.length>0){
+                    let signleTitle={
+                        'title':title,
+                        'description':description
+                    }
+                    this.note.push(signleTitle),
+                        this.title='';
+                        this.description='';
+                        this.successText="Note Added";
+                        this.errorText="";
+
+                }else{
+                    this.errorText="Note not added";
+                    this.successText="";
+                    return;
+
+                }
+            },
+            deleteNote(index){
+               this.note.splice(index,1);
+               this.successText="Note deleted!!";
+               this.errorText="";
+
+            }
+
+        },
+        mounted(){
+
+            this.loading=false;
+            this.note.push(
+                {
+                    'title':"Title-1",
+                    'description': "Description -2 and more"
+                },
+                {
+                    'title':"Title-2",
+                    'description': "Description -3 and more"
+                }
+            )
+
+        }
+    })
+</script>
+</body>
+
+</html>
